@@ -1,6 +1,13 @@
-#include "include.h"
+#include "BitExchange.hpp"
 
 int main()
 {
-    std::cout << "hello world!\n";
+    try
+    {
+        BitExchange a;
+    }
+    catch(std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
 }
