@@ -6,8 +6,8 @@ CXXFLAGS := -Wall -Wextra -Werror -std=c++17
 INCLUDE_DIR := include
 SRC_DIR := src
 OBJ_DIR := obj
-SRC_FILES := main.cpp
-INCLUDES_FILES := include.h
+SRC_FILES := main.cpp BitExchange.cpp
+INCLUDES_FILES := include.h BitExchange.hpp
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
