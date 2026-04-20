@@ -14,6 +14,8 @@
 #define FIRST_DASH_IDX 4
 #define SECOND_DASH_IDX 7
 #define THIRD_DASH_IDX 7
+#define PIPE_IDX 10
+#define MAX_SIZE 19
 
 #define YEAR_SIZE 4
 #define MONTH_SIZE 2

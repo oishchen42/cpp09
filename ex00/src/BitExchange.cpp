@@ -38,11 +38,11 @@ bool BitExchange::isDateValid(const std::string& date) const
 
 bool BitExchange::validateLine(const std::string& line) const
 {
-    std::regex pattern("^[0-9]{4}-[0-9]{2}-[0-9]{2},[0-9]{1,5}+(.{0,1}[0-9]{1,4}){0,1}$");
+    std::regex pattern("^[0-9]{4}-[0-9]{2}-[0-9]{2},[0-9]{1,5}+(\\.{0,1}[0-9]{1,4}){0,1}$");
     if (!std::regex_match(line, pattern))
-        throw std::logic_error("Error: line's format does not match (allowed type: 0000-00-00,00.00)");
+        throw std::logic_error("Error: line's format does not match (allowed type: 0000-00-00,00.00).");
     if (!isDateValid(line.substr(0, 10)))
-        throw std::logic_error("Error: the date is not valid");
+        throw std::logic_error("Error: the date is not valid.");
     #if DEBUG
         std::cout << "\n====isValidDataLine==============\n";
         std::cout << "That is our date: " << date << "\n";
@@ -58,7 +58,7 @@ void BitExchange::getDB(const std::string &dbFile)
 
     if (!file.is_open())
     {
-        throw std::runtime_error("Error: the file \"data.csv\" does not exist or is named not correctly");
+        throw std::runtime_error("Error: the file \"data.csv\" does not exist or is named not correctly.");
     }
     std::string line;
     std::getline(file, line);
@@ -74,7 +74,7 @@ void BitExchange::getDB(const std::string &dbFile)
         if (!validateLine(line))
         {
             file.close();
-            throw std::logic_error("Error: the date should be of a format yyyy-mm-dd (2009-01-02; 2022-03-29) and the value could not be more then 99999)");
+            throw std::logic_error("Error: the date should be of a format yyyy-mm-dd (2009-01-02; 2022-03-29) and the value could not be more then 99999).");
         }
         #if DEBUG
             std::cout << "============getDB=============\n";
@@ -86,16 +86,63 @@ void BitExchange::getDB(const std::string &dbFile)
     file.close();
 }
 
-void BitExchange::inputFile(const std::string &fileName) const
+void BitExchange::inputFile(const std::string &fileName)
 {
     std::ifstream file(fileName);
     if (!file.is_open())
     {
-        throw std::runtime_error("Error: the file could not be opened or does not exist");
+        throw std::runtime_error("Error: the file could not be opened or does not exist.");
     }
     std::string line;
     std::getline(file, line);
     if (line != FIRST_LINE)
-        throw std::logic_error("Error: the first line of input file should be (\"date | value\")");
-    
+    {
+        file.close();
+        throw std::logic_error("Error: the first line of input file should be (\"date | value\").");
+    }
+    while (std::getline(file, line))
+    {
+        if (line.empty())
+            continue;
+        calculateAndPrint(line);
+    }
+    file.close();
+}
+
+void BitExchange::calculateAndPrint(const std::string& line)
+{
+    std::regex pattern("^[0-9]{4}-[0-9]{2}-[0-9]{2} \\| [0-9]+(\\.[0-9]+)?$");
+    if (!std::regex_match(line, pattern))
+    {
+        std::cerr << "Error: the format of the value is wrong. Try again following the example from the subject.\n";
+        return ;
+    }
+    if (line.size() > MAX_SIZE)
+    {
+        std::cerr << "Error: the value is too big.";
+        return ;
+    }
+    std::string value = line.substr(13);
+    std::cout << "our value |" << value << "|\n";
+    float value_f = std::stod(value);
+    if (value_f < 0 || value_f > 1000.0)
+        std::cerr << ("Error: the value should be in the range [0, 1000].");
+    float modifer = getPrice(line.substr(0, 10));
+    if (modifer != -1.0)
+        std::cout << line.substr(0, 10) << " => " << value_f << " = " << modifer * value_f << "\n";
+}
+
+float BitExchange::getPrice(const std::string &date)
+{
+    std::cout << "Our DATE: |" << date << "|\n";
+    std::map<std::string, float>::iterator it = _database.lower_bound(date);
+    if (it != _database.end() && it->first == date)
+        return it->second;
+    if (it == _database.begin())
+    {
+        std::cerr << "Error: the given date should not be earlier the first date in data.csv.";
+        return -1.0;
+    }
+    --it;
+    return it->second;
 }
