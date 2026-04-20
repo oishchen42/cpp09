@@ -9,8 +9,10 @@ public:
     BitExchange& operator=(const BitExchange &other);
     ~BitExchange();
 
-    void beInput(const std::string& file) const;
-    
+    void inputFile(const std::string &file) const;
+
+    void findDate(const std::string &date) const;
+
     private:
     std::map<std::string, float> _database;
 
@@ -19,9 +21,9 @@ public:
     bool purifyInput(const std::string& line, std::string& date, float& value) const;
 
     // data.csv checkers
-    bool isValidDataLine(const std::string& line) const;
-    bool checkDate(const std::string& date) const;
-    bool checkValue(const std::string& value) const;
-    bool checkMonthDay(long year_l, long month_l, long day_l) const;
-    bool isLeap(long year_l) const;
+    bool validateLine(const std::string& line) const;
+    bool isDateValid(const std::string& date) const;
+    float purifyValue(const std::string& value) const;
+    bool isValidMonthDay(long year_l, long month_l, long day_l) const;
+    bool isDouble(const std::string &value) const;
 };
