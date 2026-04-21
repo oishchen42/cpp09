@@ -25,7 +25,7 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(OBJ_DIR)
 
 fclean: clean
 	$(RM) $(NAME)
