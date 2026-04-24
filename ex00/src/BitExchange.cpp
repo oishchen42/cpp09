@@ -5,6 +5,11 @@ BitExchange::BitExchange()
     this->getDB("data.csv");
 }
 
+BitExchange::BitExchange(const BitExchange &other)
+{
+
+}
+
 BitExchange::~BitExchange() {};
 
 bool BitExchange::isValidMonthDay(long year_l, long month_l, long day_l) const
@@ -16,14 +21,6 @@ bool BitExchange::isValidMonthDay(long year_l, long month_l, long day_l) const
     if (month_l == 2 && ((year_l % 4 == 0 && year_l % 100 != 0) || year_l % 400 == 0))
         max_day = 29;
     return (day_l <= max_day);
-}
-
-bool BitExchange::isDouble(const std::string &str) const
-{
-    std::regex regex("^[0-9]+(\\.[0-9]{1,4})?$");
-    if(!std::regex_match(str, regex))
-        return (false);
-    return (true);
 }
 
 bool BitExchange::isDateValid(const std::string& date) const
@@ -41,14 +38,8 @@ bool BitExchange::validateLine(const std::string& line) const
     std::regex pattern("^[0-9]{4}-[0-9]{2}-[0-9]{2},[0-9]{1,5}+(\\.{0,1}[0-9]{1,4}){0,1}$");
     if (!std::regex_match(line, pattern))
         throw std::logic_error("Error: line's format does not match (allowed type: 0000-00-00,00.00).");
-    if (!isDateValid(line.substr(0, 10)))
+    if (!isDateValid(line.substr(0, DATE_LENGTH)))
         throw std::logic_error("Error: the date is not valid.");
-    #if DEBUG
-        std::cout << "\n====isValidDataLine==============\n";
-        std::cout << "That is our date: " << date << "\n";
-        std::cout << "That is our value: " << value << "\n";
-        std::cout << "==================================\n";
-    #endif
     return true;
 }
 
@@ -81,7 +72,7 @@ void BitExchange::getDB(const std::string &dbFile)
             std::cout << line << " - IS CLEAN\n";
             std::cout << "=============================\n";
         #endif
-        this->_database[line.substr(0,10)] = stod(line.substr(11));
+        this->_database[line.substr(0,DATE_LENGTH)] = stod(line.substr(VALUE_IDX));
     }
     file.close();
 }
@@ -122,19 +113,17 @@ void BitExchange::calculateAndPrint(const std::string& line)
         std::cerr << "Error: the value is too big.";
         return ;
     }
-    std::string value = line.substr(13);
-    std::cout << "our value |" << value << "|\n";
+    std::string value = line.substr(PIPE_IDX);
     float value_f = std::stod(value);
     if (value_f < 0 || value_f > 1000.0)
         std::cerr << ("Error: the value should be in the range [0, 1000].");
-    float modifer = getPrice(line.substr(0, 10));
+    float modifer = getPrice(line.substr(0, DATE_LENGTH));
     if (modifer != -1.0)
-        std::cout << line.substr(0, 10) << " => " << value_f << " = " << modifer * value_f << "\n";
+        std::cout << line.substr(0, DATE_LENGTH) << " => " << value_f << " = " << modifer * value_f << "\n";
 }
 
 float BitExchange::getPrice(const std::string &date)
 {
-    std::cout << "Our DATE: |" << date << "|\n";
     std::map<std::string, float>::iterator it = _database.lower_bound(date);
     if (it != _database.end() && it->first == date)
         return it->second;
