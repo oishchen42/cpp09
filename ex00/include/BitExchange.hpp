@@ -5,8 +5,8 @@ class BitExchange
 {
 public:
     BitExchange();
-    BitExchange(const BitExchange &other);
-    BitExchange& operator=(const BitExchange &other);
+    BitExchange(const BitExchange &other) = delete;
+    BitExchange& operator=(const BitExchange &other) = delete;
     ~BitExchange();
 
     void inputFile(const std::string &file);
