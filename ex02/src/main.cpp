@@ -11,6 +11,7 @@ int main(int ac, char **av)
     try
     {
         Wrapp::sortVec(input);
+        Wrapp::sortDque(input);
     }
     catch(std::exception &e)
     {

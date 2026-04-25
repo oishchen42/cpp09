@@ -6,8 +6,8 @@ CXXFLAGS := -Wall -Wextra -Werror -std=c++17
 INCLUDE_DIR := include
 SRC_DIR := src
 OBJ_DIR := obj
-SRC_FILES := main.cpp Wrapp.cpp
-INCLUDES_FILES := Wrapp.hpp
+SRC_FILES := main.cpp Wrapp.cpp helpers.cpp
+INCLUDES_FILES := Wrapp.hpp include.h
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 OBJ := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
