@@ -5,13 +5,6 @@ BitExchange::BitExchange()
     this->getDB("data.csv");
 }
 
-BitExchange::BitExchange(const BitExchange &other)
-{
-
-}
-
-BitExchange::~BitExchange() {};
-
 bool BitExchange::isValidMonthDay(long year_l, long month_l, long day_l) const
 {
     const std::array<int, 12> days = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
