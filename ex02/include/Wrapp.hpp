@@ -1,13 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <deque>
-#include <regex>
-#include <stdexcept>
-#include <string>
-#include <charconv>
-#include <sys/time.h>
+#include "include.h"
 
 class Wrapp
 {

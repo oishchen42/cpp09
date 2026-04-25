@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stack>
+#include <list>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>

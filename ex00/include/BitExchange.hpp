@@ -7,7 +7,7 @@ public:
     BitExchange();
     BitExchange(const BitExchange &other) = delete;
     BitExchange& operator=(const BitExchange &other) = delete;
-    ~BitExchange();
+    ~BitExchange() = default;
 
     void inputFile(const std::string &file);
 
